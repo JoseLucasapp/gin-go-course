@@ -1,8 +1,6 @@
 package service
 
-import (
-	"gin-course/entity"
-)
+import "github.com/gin-go-course/entity"
 
 type VideoService interface {
 	Save(entity.Video) entity.Video

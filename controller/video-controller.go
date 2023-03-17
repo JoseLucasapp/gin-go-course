@@ -1,9 +1,8 @@
 package controller
 
 import (
-	"gin-course/entity"
-	"gin-course/service"
-
+	"github.com/gin-go-course/entity"
+	"github.com/gin-go-course/service"
 	"github.com/gin-gonic/gin"
 )
 
