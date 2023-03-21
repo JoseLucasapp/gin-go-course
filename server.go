@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"net/http"
 	"os"
 
 	"github.com/gin-go-course/controller"
@@ -30,7 +31,12 @@ func main() {
 		ctx.JSON(200, videoController.FindAll())
 	})
 	server.POST("/videos", func(ctx *gin.Context) {
-		ctx.JSON(200, videoController.Save(ctx))
+		err := videoController.Save(ctx)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		} else {
+			ctx.JSON(http.StatusOK, gin.H{"message": "Video Input is valid!!"})
+		}
 	})
 
 	server.GET("/test", func(ctx *gin.Context) {
