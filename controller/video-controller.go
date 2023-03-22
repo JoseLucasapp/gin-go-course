@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-go-course/entity"
 	"github.com/gin-go-course/service"
@@ -13,6 +14,8 @@ import (
 type VideoController interface {
 	FindAll() []entity.Video
 	Save(ctx *gin.Context) error
+	Update(ctx *gin.Context) error
+	Delete(ctx *gin.Context) error
 	ShowAll(ctx *gin.Context)
 }
 
@@ -36,7 +39,7 @@ func (c *controller) FindAll() []entity.Video {
 
 func (c *controller) Save(ctx *gin.Context) error {
 	var video entity.Video
-	err := ctx.BindJSON(&video)
+	err := ctx.ShouldBindJSON(&video)
 	if err != nil {
 		return err
 	}
@@ -45,6 +48,36 @@ func (c *controller) Save(ctx *gin.Context) error {
 		return err
 	}
 	c.service.Save(video)
+	return nil
+}
+
+func (c *controller) Update(ctx *gin.Context) error {
+	var video entity.Video
+	err := ctx.ShouldBindJSON(&video)
+	if err != nil {
+		return err
+	}
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		return err
+	}
+	video.ID = id
+	err = validate.Struct(video)
+	if err != nil {
+		return err
+	}
+	c.service.Update(video)
+	return nil
+}
+
+func (c *controller) Delete(ctx *gin.Context) error {
+	var video entity.Video
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		return err
+	}
+	video.ID = id
+	c.service.Delete(video)
 	return nil
 }
 
